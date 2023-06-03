@@ -16,3 +16,9 @@ Le 9 boutons tactiles bleus correspondent à 9 sons préenregistrés. Dans l'ord
 
 Le bouton rouge du haut permet de lancer la musique de fond (Angele) sans modification
 Les deux du bas permettent d'arrêter la musique. (Si vous avez des fros doigts, vous pouvez appuyer entre les deux.)
+
+
+
+Amélioration à faire : 
+
+passer la variable sound2play en variable globale pour pouvoir lire les sons de manière continue (sans revenir à Angele)
