@@ -74,6 +74,7 @@
 uint16_t sinus12bit[360];
 uint32_t index_fichier = 0;
 uint16_t buffer[2048];
+uint16_t sound2play = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -179,7 +180,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  int sound2play = 0;
+	  sound2play = 0;
 
 	  int last_x = 0;
 	  int last_y = 0;
@@ -194,67 +195,67 @@ int main(void)
 
 
 	  if (last_x>40 && last_x<120 && last_y>40 && last_y<80){
+		  sound2play = 1;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (tou1_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 1;
 	  }
 	  if (last_x>140 && last_x<220 && last_y>40 && last_y<80){
+		  sound2play = 2;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (tou2_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 2;
 	  }
 	  if (last_x>240 && last_x<320 && last_y>40 && last_y<80){
+		  sound2play = 3;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (tou3_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 3;
 	  }
 	  if (last_x>40 && last_x<120 && last_y>100 && last_y<140){
+		  sound2play = 4;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (boum_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 4;
 	  }
 	  if (last_x>140 && last_x<220 && last_y>100 && last_y<140){
+		  sound2play = 5;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (clack_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 5;
 	  }
 	  if (last_x>240 && last_x<320 && last_y>100 && last_y<140){
+		  sound2play = 6;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (kk_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 6;
 	  }
 	  if (last_x>40 && last_x<120 && last_y>160 && last_y<200){
+		  sound2play = 7;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (pa_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 7;
 	  }
 	  if (last_x>140 && last_x<220 && last_y>160 && last_y<200){
+		  sound2play = 8;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (po_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 8;
 	  }
 	  if (last_x>240 && last_x<320 && last_y>160 && last_y<200){
+		  sound2play = 9;
 		  // Initialisation du buffer avec le début du son
 	      for (int i= 0;i<SIZE_BUFFER;i++)
 	    	  buffer[i] = (tss_sounddata_data[index_fichier++] << 4);
 	      HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*) buffer, SIZE_BUFFER, DAC_ALIGN_12B_R);
-		  sound2play = 9;
 	  }
 
 
@@ -336,7 +337,7 @@ void SystemClock_Config(void)
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6) != HAL_OK)
   {
     Error_Handler();
-  }
+  }sounddata_data
 }
 
 /* USER CODE BEGIN 4 */
@@ -347,13 +348,107 @@ void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac) {
 	 * on actualise les valeurs de la première moitié du buffer avec la suite de notre son.
 	 * Le son est lu en boucle
 	 */
-	HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
-	if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
-		for (int i = 0; i<(SIZE_BUFFER/2);i++)
-			buffer[i] = (sounddata_data[index_fichier++]<<4);
+
+	if (sound2play ==0) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
 	}
-	else
-		index_fichier = 0;
+	if (sound2play ==1) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (tou1_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (tou1_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==2) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (tou2__sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (tou2_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==3) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (tou3__sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (tou3_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==4) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (boum_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==5) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (clack_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (clack_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==6) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (kk_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (kk_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==7) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (pa_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (pa_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==8) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (po_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (po_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==9) {
+
+		HAL_GPIO_TogglePin(LED18_GPIO_Port, LED18_Pin);
+		if (index_fichier < (tss_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = 0; i<(SIZE_BUFFER/2);i++)
+				buffer[i] = (tss_sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
 }
 void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac) {
 	/* Fonction d'interruption se déclenchant lorsque
@@ -361,12 +456,97 @@ void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac) {
 	 * Pendant que le DMA s'occupe de transmettre la première moitié du buffer,
 	 * on actualise les valeurs de la deuxième moitié du buffer avec la suite de notre son.
 	*/
-	if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
-		for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
-			buffer[i] = (sounddata_data[index_fichier++]<<4);
+
+	if (sound2play == 0){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
 	}
-	else
-		index_fichier = 0;
+	if (sound2play == 1){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 2){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play ==3){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 4){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 5){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 6){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 7){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 8){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
+	if (sound2play == 9){
+
+		if (index_fichier < (boum_sounddata_length - SIZE_BUFFER/2)) {
+			for (int i = SIZE_BUFFER/2;i<SIZE_BUFFER;i++)
+				buffer[i] = (sounddata_data[index_fichier++]<<4);
+		}
+		else
+			index_fichier = 0;
+	}
 
 }
 /* USER CODE END 4 */
